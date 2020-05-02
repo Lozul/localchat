@@ -14,6 +14,7 @@ var timer;              // Timer used to send 'update' request
 var last_update;        // Timestamp of the previous request_messages call
 
 var message_html;       // HTML template of a message.
+var member_html;
 
 // Functions
 // ----------------------------------------------------------------------------
@@ -58,6 +59,9 @@ function init()
     message_html = tmp.outerHTML;
     tmp.style.display = "none";
 
+    // Set the HTML of a member.
+    member_html = "<li>{0}</li>";
+
     // Gets the user name (set by server).
     name = document.title;
 }
@@ -76,6 +80,21 @@ function send()
 
     request_messages.open("get", "send_" + name + "_" + msg);
     request_messages.send();
+}
+
+// Adds a new member.
+function add_member(name)
+{
+    members_obj.innerHTML += member_html.format(name);
+}
+
+// Removes the user from the chat
+function quit()
+{
+    request_members.open("get", "remove_" + name);
+    request_members.send();
+
+    window.location.replace("./login.html");
 }
 
 // Callback function of the request_messages.
@@ -103,5 +122,13 @@ function request_messages_callback()
 // the list of currently online members.
 function request_members_callback()
 {
-    // TODO
+    let received_members = request_members.responseText.split("\n");
+    members_obj.innerHTML = "";
+    members_count_obj.innerHTML = received_members[0];
+
+    for (let i = 1; i < received_members.length; i ++)
+    {
+        add_member(received_members[i]);
+    }
+
 }
