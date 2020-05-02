@@ -18,3 +18,9 @@
 ├── README.md
 └── server.c
 ```
+
+## TODO
+- [x] HTML
+- [x] Javascript (client side)
+- [ ] CSS
+- [ ] C (server side)
