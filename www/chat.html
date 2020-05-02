@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Louis Gasnault">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="./css/style.css">
+        <link rel="icon" type="image/ico" href="./rsc/favicon.ico">
+        <title>%2$s</title>
+        <script type="text/javascript" src="./js/script.js"></script>
+    </head>
+    <body onload="init();">
+        <div>
+            <div id="messages">
+                <div class="message">
+                    <span class="name">{0} : </span>
+                    <span class="text">{1}</span>
+                </div>
+            </div>
+            <div id="sender">
+                <input type="text" id="text" maxlength="280" autofocus>
+                <button type="button" id="send" onclick="send();">Send</button>
+            </div>
+        </div>
+        <div>
+            <h2>ONLINE - <span id="membersCount">%1$s</span></h2>
+            <ul id="members"></ul>
+            <button type="button" id="quit" onclick="quit();">Quit</button>
+        </div>
+    </body>
+</html>
