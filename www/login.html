@@ -9,7 +9,7 @@
         <title>Login to localchat</title>
     </head>
     <body>
-        <div>
+        <div class="left">
             <h1>Welcome!</h1>
             <form action="login" method="get">
                 <input type="text" id="nickname" name="nickname" maxlength="10" minlength="3" autofocus required>
@@ -18,20 +18,21 @@
             <div id="hiw">
                 <h2>How it works.</h2>
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                    cupidatat non proident, sunt in culpa qui officia deserunt
-                    mollit anim id est laborum.
+                    You are on the login page. To join the chat room, just
+                    enter a nickname in the box above and click "Login".
+                    You will be redirected to an other page where you will be
+                    able to write messages and send them to the other people
+                    on the same wifi network as you.<br>
+                    On your right, you can see a list of peoples who are
+                    currently online.
                 </p>
             </div>
         </div>
-        <div>
-            <h2>ONLINE - %1$s</h2>
-            <ul id="members"></ul>
+        <div class="right">
+            <div>
+                <h2>ONLINE - %1$s</h2>
+                <ul id="members"></ul>
+            </div>
         </div>
     </body>
 </html>

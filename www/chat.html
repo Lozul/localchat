@@ -10,7 +10,7 @@
         <script type="text/javascript" src="./js/script.js"></script>
     </head>
     <body onload="init();">
-        <div>
+        <div class="left chat">
             <div id="messages">
                 <div class="message">
                     <span class="name">{0} : </span>
@@ -22,9 +22,11 @@
                 <button type="button" id="send" onclick="send();">Send</button>
             </div>
         </div>
-        <div>
-            <h2>ONLINE - <span id="membersCount">%1$s</span></h2>
-            <ul id="members"></ul>
+        <div class="right">
+            <div>
+                <h2>ONLINE - <span id="membersCount">%1$s</span></h2>
+                <ul id="members"></ul>
+            </div>
             <button type="button" id="quit" onclick="quit();">Quit</button>
         </div>
     </body>
