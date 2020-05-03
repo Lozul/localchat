@@ -22,5 +22,5 @@
 ## TODO
 - [x] HTML
 - [x] Javascript (client side)
-- [ ] CSS
+- [x] CSS
 - [ ] C (server side)

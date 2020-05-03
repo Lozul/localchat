@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = `pkg-config --clfags glib-2.0` -Wall -Wextra -pthread
+CFLAGS = `pkg-config --cflags glib-2.0` -Wall -pthread
 LDLIBS = `pkg-config --libs glib-2.0`
 
 EXE = server
