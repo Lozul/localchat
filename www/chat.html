@@ -6,10 +6,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="./css/style.css">
         <link rel="icon" type="image/ico" href="./rsc/favicon.ico">
-        <title>%2$s</title>
+        <title>%1$s</title>
         <script type="text/javascript" src="./js/script.js"></script>
     </head>
-    <body onload="init();">
+    <body onload="init(true);">
         <div class="left chat">
             <div id="messages">
                 <div class="message">
@@ -24,7 +24,7 @@
         </div>
         <div class="right">
             <div>
-                <h2>ONLINE - <span id="membersCount">%1$s</span></h2>
+                <h2>ONLINE - <span id="membersCount">0</span></h2>
                 <ul id="members"></ul>
             </div>
             <button type="button" id="quit" onclick="quit();">Quit</button>

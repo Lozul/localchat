@@ -10,11 +10,12 @@ var members_obj;        // List to display current online members
 var name;               // Name of the current user
 var request_messages;   // XMLHttpRequest object used to request new messages
 var request_members;    // XMLHttpRequest object used to request members list
-var timer;              // Timer used to send 'update' request
 var last_update;        // Timestamp of the previous request_messages call
 
 var message_html;       // HTML template of a message.
-var member_html;
+var member_html;        // HTML template of a member.
+
+var onChat;             // Is the script execute on the chat page
 
 // Functions
 // ----------------------------------------------------------------------------
@@ -31,22 +32,14 @@ String.prototype.format = function()
 }
 
 // Initializes the page.
-function init()
+function init(chat)
 {
-    // Initializes requests.
-    request_messages = new XMLHttpRequest();
-    request_messages.onload = request_messages_callback;
-    request_messages.responseType = "text";
+    onChat = chat;
 
+    // Initializes request for members.
     request_members = new XMLHttpRequest();
     request_members.onload = request_members_callback;
     request_members.responseType = "text";
-
-    // Gets the element to print messages.
-    messages_obj = document.querySelector("div#messages");
-
-    // Gets the element where user enter his message.
-    text_obj = document.querySelector("input#text");
 
     // Gets the element to display curent online members count.
     members_count_obj = document.querySelector("span#membersCount");
@@ -54,16 +47,46 @@ function init()
     // Gets the element to display the list of online members.
     members_obj = document.querySelector("ul#members");
 
-    // Gets the HTML of a message and hide the template.
-    let tmp = document.querySelector("div.message");
-    message_html = tmp.outerHTML;
-    tmp.style.display = "none";
-
     // Set the HTML of a member.
     member_html = "<li>{0}</li>";
 
-    // Gets the user name (set by server).
-    name = document.title;
+    // Updates members and messages every seconds
+    window.setInterval(update, 1000);
+
+    if (onChat)
+    {
+        // Initializes request for messages.
+        request_messages = new XMLHttpRequest();
+        request_messages.onload = request_messages_callback;
+        request_messages.responseType = "text";
+
+        // Gets the element to print messages.
+        messages_obj = document.querySelector("div#messages");
+
+        // Gets the element where user enter his message.
+        text_obj = document.querySelector("input#text");
+
+        // Gets the HTML of a message and hide the template.
+        let tmp = document.querySelector("div.message");
+        message_html = tmp.outerHTML;
+        tmp.style.display = "none";
+
+        // Gets the user name (set by server).
+        name = document.title;
+    }
+}
+
+// Sends an 'update' command to the server
+function update()
+{
+    request_members.open("get", "members");
+    request_members.send();
+
+    if (onChat)
+    {
+        request_messages.open("get", "messages");
+        request_members.send();
+    }
 }
 
 // Adds a new message.

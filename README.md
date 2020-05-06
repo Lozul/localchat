@@ -24,3 +24,14 @@
 - [x] Javascript (client side)
 - [x] CSS
 - [ ] C (server side)
+    - [x] Server socket
+    - [ ] Commands
+        - [ ] Login -> TODO: implements user list + add when login
+        - [ ] Update
+        - [ ] Send
+        - [ ] Remove
+    - [ ] CLI
+        - [ ] Quit function (free)
+        - [ ] Send message as server
+        - [ ] Disconnect a/all user(s)
+        - [ ] Clean messages

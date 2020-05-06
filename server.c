@@ -24,6 +24,7 @@ struct addrinfo* rp;
 struct addrinfo* result;
 
 pthread_t cli_thr;
+pthread_t client_thr;
 
 int cnx;
 int run;
@@ -69,6 +70,110 @@ void connect_socket(const char* port)
         errx(EXIT_FAILURE, "Can't make the socket passive.");
 }
 
+// Worker for client connection
+void* client_worker(void* arg)
+{
+    // Gets file descriptor
+    int client_cnx = *(int*) arg;
+
+    // Variables
+    int r;
+    int w = 1;
+    gsize offset;
+    gboolean suffixed;
+    GString* request = g_string_new("");
+    GString* response = g_string_new("");
+    char* buffer = malloc(sizeof(char) * BUFFER_SIZE);
+
+    // Attempts to read client request
+    r = read(client_cnx, buffer, BUFFER_SIZE);
+    if (r == 0)
+    {
+        // Empty request
+        close (client_cnx);
+    }
+    else
+    {
+        // Reads client request (until reach SUFFIX)
+        suffixed = g_str_has_suffix(request -> str, SUFFIX);
+        while (!suffixed && r > 0)
+        {
+            g_string_append(request, buffer);
+            memset(buffer, 0, BUFFER_SIZE);
+
+            suffixed = g_str_has_suffix(request -> str, SUFFIX);
+            if (!suffixed)
+                r = read(client_cnx, buffer, BUFFER_SIZE);
+        }
+
+        if (r == -1)
+            errx(EXIT_FAILURE, "read() failed.");
+
+        // Gets the rsc (between the 5th char and the first space char).
+        gchar* tmp_0 = request -> str + 5;
+        gchar* tmp_1 = g_strstr_len(tmp_0, request -> len, " ");
+        gchar* rsc = g_strndup(tmp_0, tmp_1 - tmp_0);
+        gchar* file = g_strjoin("", "www/", rsc, NULL);
+
+        // printf("[%i]: %s\n", client_cnx, rsc);
+
+        // Prepares response
+        g_string_append(response, "HTTP/1.1 200 OK\r\n\r\n");
+
+        // If file exist, return contents, else return resul of command
+        gchar* contents;
+        gsize length;
+        if (g_file_get_contents(file, &contents, &length, NULL))
+        {
+            g_string_append_len(response, contents, length);
+            free(contents);
+        }
+        else
+        {
+            if (strcmp(rsc, "members") == 0)
+            {
+                g_string_append(response, "1\nLouis");
+            }
+            else if (strstr(rsc, "login") != NULL)
+            {
+                g_file_get_contents("www/chat.html", &contents, &length, NULL);
+                g_string_append_printf(response, contents,
+                        g_strstr_len(rsc, tmp_1 - tmp_0, "=") + 1);
+                free(contents);
+            }
+            else
+            {
+                g_file_get_contents("www/login.html", &contents, &length, NULL);
+                g_string_append_len(response, contents, length);
+                free(contents);
+            }
+        }
+
+        // Sends response
+        offset = 0;
+        while (offset < response -> len && w > 0)
+        {
+            w = write(client_cnx, response -> str + offset,
+                    response -> len - offset);
+            offset += w;
+        }
+
+        if (w == -1)
+            errx(EXIT_FAILURE, "write() failed.");
+
+        free(rsc);
+        free(file);
+    }
+
+    g_string_free(request, TRUE);
+    g_string_free(response, TRUE);
+    free(buffer);
+    close(client_cnx);
+
+    pthread_exit(NULL);
+}
+
+// Worker for CLI thread
 void* cli_worker(void* arg)
 {
     char* input;
@@ -102,14 +207,25 @@ void clean_exit()
 int main()
 {
     const char* port = "2048";
+    int client_cnx;
+
     connect_socket(port);
 
     printf("%s\n%s %s\n", "Local Chat Server", "Listening to port", port);
 
-    start_cli();
+    // start_cli();
 
     run = 1;
-    while (run);
+    while (run)
+    {
+        client_cnx = accept(cnx, rp -> ai_addr, &(rp -> ai_addrlen));
+        if (client_cnx == -1)
+            errx(EXIT_FAILURE, "accept() failed.");
+
+        if (pthread_create(&client_thr, NULL, client_worker, &client_cnx) != 0)
+            errx(EXIT_FAILURE, "pthread_create() failed.");
+        pthread_detach(client_thr);
+    }
 
     clean_exit();
 }

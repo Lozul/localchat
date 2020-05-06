@@ -7,8 +7,9 @@
         <link rel="stylesheet" href="./css/style.css">
         <link rel="icon" type="image/ico" href="./rsc/favicon.ico">
         <title>Login to localchat</title>
+        <script type="text/javascript" src="./js/script.js"></script>
     </head>
-    <body>
+    <body onload="init(false);">
         <div class="left">
             <h1>Welcome!</h1>
             <form action="login" method="get">
@@ -30,7 +31,7 @@
         </div>
         <div class="right">
             <div>
-                <h2>ONLINE - %1$s</h2>
+                <h2>ONLINE - <span id="membersCount">0</span></h2>
                 <ul id="members"></ul>
             </div>
         </div>
