@@ -26,10 +26,11 @@
 - [ ] C (server side)
     - [x] Server socket
     - [ ] Commands
-        - [ ] Login -> TODO: implements user list + add when login
-        - [ ] Update
+        - [x] Login
+        - [x] Update members
+        - [ ] Updates messages
         - [ ] Send
-        - [ ] Remove
+        - [ ] NEXT Remove -> Implements a linked list (better add and remove for the members) then change update members
     - [ ] CLI
         - [ ] Quit function (free)
         - [ ] Send message as server

@@ -29,8 +29,12 @@ pthread_t client_thr;
 int cnx;
 int run;
 
+GString* members;
+
 // Functions
 // ----------------------------------------------------------------------------
+
+gsize count_members();
 
 // Gets the file descriptor of the server
 void connect_socket(const char* port)
@@ -126,26 +130,34 @@ void* client_worker(void* arg)
         if (g_file_get_contents(file, &contents, &length, NULL))
         {
             g_string_append_len(response, contents, length);
-            free(contents);
+            g_free(contents);
         }
         else
         {
             if (strcmp(rsc, "members") == 0)
             {
-                g_string_append(response, "1\nLouis");
+                char* nb = malloc(sizeof(gsize));
+                sprintf(nb, "%lu", count_members());
+                g_string_append_printf(response, "%s\n%s", nb, members -> str);
             }
             else if (strstr(rsc, "login") != NULL)
             {
+                gchar* name = g_strjoin("\n",
+                    g_strstr_len(rsc, tmp_1 - tmp_0, "=") + 1, "", NULL);
+
+                printf("[%i] New connection: %s", client_cnx, name);
+
                 g_file_get_contents("www/chat.html", &contents, &length, NULL);
-                g_string_append_printf(response, contents,
-                        g_strstr_len(rsc, tmp_1 - tmp_0, "=") + 1);
-                free(contents);
+                g_string_append_printf(response, contents, name);
+                g_string_append(members, name);
+                g_free(contents);
+                g_free(name);
             }
             else
             {
                 g_file_get_contents("www/login.html", &contents, &length, NULL);
                 g_string_append_len(response, contents, length);
-                free(contents);
+                g_free(contents);
             }
         }
 
@@ -161,8 +173,8 @@ void* client_worker(void* arg)
         if (w == -1)
             errx(EXIT_FAILURE, "write() failed.");
 
-        free(rsc);
-        free(file);
+        g_free(rsc);
+        g_free(file);
     }
 
     g_string_free(request, TRUE);
@@ -197,6 +209,20 @@ void start_cli()
     pthread_detach(cli_thr);
 }
 
+// Returns number of members
+gsize count_members()
+{
+    gsize nb = 0;
+
+    for (gsize i = 0; i < members -> len; i ++)
+    {
+        if (members -> str[i] == '\n')
+            nb ++;
+    }
+
+    return nb;
+}
+
 // Frees allocated memorie and close the connection
 void clean_exit()
 {
@@ -208,6 +234,8 @@ int main()
 {
     const char* port = "2048";
     int client_cnx;
+
+    members = g_string_new("");
 
     connect_socket(port);
 

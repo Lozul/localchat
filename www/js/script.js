@@ -74,6 +74,8 @@ function init(chat)
         // Gets the user name (set by server).
         name = document.title;
     }
+
+    update();
 }
 
 // Sends an 'update' command to the server
@@ -82,11 +84,11 @@ function update()
     request_members.open("get", "members");
     request_members.send();
 
-    if (onChat)
-    {
-        request_messages.open("get", "messages");
-        request_members.send();
-    }
+    // if (onChat)
+    // {
+    //     request_messages.open("get", "messages");
+    //     request_members.send();
+    // }
 }
 
 // Adds a new message.
@@ -149,7 +151,7 @@ function request_members_callback()
     members_obj.innerHTML = "";
     members_count_obj.innerHTML = received_members[0];
 
-    for (let i = 1; i < received_members.length; i ++)
+    for (let i = 1; i < received_members.length - 1; i ++)
     {
         add_member(received_members[i]);
     }
