@@ -1,8 +1,10 @@
-# [WIP] A local chat server
+# [WIP] A local chat server -- IN PAUSE
 
 > This is a local chat server write in C and Javascript. While the chat is hosted on a computer using a wifi network, every other device connected to the same network should be able to join the chat room by using the IP of the hoster.
 
-## Tree
+## Actual `tree`
+> This structure will evolve when the main features will be finished.
+
 ```
 .
 ├── www
@@ -36,3 +38,5 @@
         - [ ] Send message as server
         - [ ] Disconnect a/all user(s)
         - [ ] Clean messages
+- [ ] Organize project files
+- [ ] Add missing comments and refactor the other
